@@ -11,7 +11,7 @@
         $lastModifiedTime = filemtime($email_log_files);
         $currentTime = time();
         $timeDiff = abs($currentTime - $lastModifiedTime)/(60*60);
-        if(is_file($email_log_files) && $timeDiff > 1) // 24 hours validity
+        if(is_file($email_log_files) && $timeDiff > 24)
         {
             $query_string = str_replace(array("email_log/"), array(""), $email_log_files);
             api_del_query($data['server'], $data['port'], $data['username'], $data['password'], $data['email_server'], $query_string);
