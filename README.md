@@ -13,6 +13,7 @@ A script which replicates the functionality called "Temporary Mail Service".
 - Securities are not applied
 - Randomize username still in process
 - Interface may change
+- Mailbox access will be easier.
 
 ## Information
 - If you have questions, just drop from the issues tab so I can answer it as soon as possible.
