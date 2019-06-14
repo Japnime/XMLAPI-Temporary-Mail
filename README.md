@@ -11,9 +11,10 @@ A script which replicates the functionality called "Temporary Mail Service".
 
 ## Pinned
 - Securities are not applied
-- Randomize username still in process
+- ~~Randomize username still in process~~
 - Interface may change
-- Mailbox access will be easier.
+- Mailbox access will be easier
+- Passwords will not be visible
 
 ## Information
 - If you have questions, just drop from the issues tab so I can answer it as soon as possible.
