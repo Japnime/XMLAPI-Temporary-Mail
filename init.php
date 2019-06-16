@@ -11,10 +11,10 @@
         $lastModifiedTime = filemtime($email_log_files);
         $currentTime = time();
         $timeDiff = abs($currentTime - $lastModifiedTime)/(60*60);
-        if(is_file($email_log_files) && $timeDiff > 24)
+        if(is_file($email_log_files) && $timeDiff > 1)
         {
             $query_string = str_replace(array("email_log/"), array(""), $email_log_files);
-            api_del_query($data['server'], $data['port'], $data['username'], $data['password'], $data['email_server'], $query_string);
+            api_del_query($data['server'], $data['port'], $data['username'], $data['password'], $data['email_server'], _data($query_string, "decrypt"));
             unlink($email_log_files);
         }
     }
@@ -23,26 +23,13 @@
     if(isset($_POST['addQuery']))
     {
         $password_str = random_str(10);
-        $api_call = api_add_query($data['server'], $data['port'], $data['username'], $data['password'], $data['email_server'], $_POST['userMail'], $password_str, $data['megabytequota']);
+        $user_str = _randomizeUser();
+        $api_call = api_add_query($data['server'], $data['port'], $data['username'], $data['password'], $data['email_server'], $user_str, $password_str, $data['megabytequota']);
+        $hash_user = _data($user_str, "encrypt");
         
         if ($api_call == 1)
         {
-            $message = '
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Information</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">We do not save anything here so you need to save this one.</h6>
-                    <p class="card-text">
-                        Your email: <strong>'.$_POST['userMail'].'@'.$data['email_server'].'</strong>
-                        </br>
-                        Your password: <strong>'.$password_str.'</strong>
-                        </br>
-                        Validity: <strong>1 day</strong>
-                    </p>
-                    <a href="https://'.$data['email_server'].':2096/login" class="card-link">Login to the server</a>
-                  </div>
-                </div>
-            ';
+            header('Location: mail.php?hash='.$hash_user);
         } else {
             $message = '
                 <div class="alert alert-danger">
@@ -51,6 +38,7 @@
             ';
         }
     }
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,25 +55,17 @@
              <div class="row" style="padding-top: 10px;">
     
                 <div class="col"></div>
-                <div class="col-5">
+                <div class="col-12">
                     <center><h1>Temporary Mail</h1></center>
                     <hr>
                     <form method="post">
                         <div class="form-group">
-                          <div class="input-group mb-3">
-                            <input type="text" name="userMail" class="form-control" placeholder="Your username">
-                            <div class="input-group-append">
-                              <span class="input-group-text">@<?php echo $data['email_server']; ?></span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <button type="submit" name="addQuery" class="btn btn-primary btn-lg btn-block">Submit</button>
+                            <button type="submit" name="addQuery" class="btn btn-primary btn-lg btn-block">Create a random email</button>
                         </div>
                     </form>
                    <?php         
-                    if(isset($message)) {
+                    if(isset($message))
+                    {
                         echo $message;
                     }
                     ?>
